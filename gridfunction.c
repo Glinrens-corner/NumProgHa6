@@ -204,7 +204,7 @@ void addevalLaplace_gridfunction(double a, void *data, pcgridfunction u,
                                  pgridfunction v)
 {
   int n;
-  double *uval, *vval, h, b;
+  double *uval, *vval, h /*, b*/;
 
   n = u->n;
   h = u->h;
@@ -215,6 +215,25 @@ void addevalLaplace_gridfunction(double a, void *data, pcgridfunction u,
 
   assert(n == v->n && h == v->h);
 
+  double factor = a/(h*h);
+
+
+  /*
+    Currently the looped variant is implemented
+
+    TODO: replace with BLAS based Implementation
+   */
+  for (int icol = 1; icol < n+2 ; icol++){
+    for (int irow = 1; irow < n+2 ; irow++){
+      
+      vval[irow+icol*(n+2)] = factor*(4.0*uval[irow+icol*(n+2)]
+				      -uval[irow+1+icol*(n+2)]
+				      -uval[irow-1+icol*(n+2)]
+				      -uval[irow+(icol+1)*(n+2)]
+				      -uval[irow+(icol-1)*(n+2)]);
+
+    }
+  }
   /*
    * TODO:
    */
