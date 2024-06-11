@@ -121,7 +121,7 @@ int main(void)
   clear_gridfunction(v);
   addevalLaplace_gridfunction(1.0, NULL, u, v);
   
-  iterate_gradient(eps_solve, (addeval_func)addevalLaplace_gridfunction, (add_func)add_gridfunction,
+  iterate_cg(eps_solve, (addeval_func)addevalLaplace_gridfunction, (add_func)add_gridfunction,
              (scal_func)scal_gridfunction, (clear_func)clear_gridfunction, (dotprod_func)dotprod_gridfunction,
              (norm_func)norm_gridfunction, NULL, (void *)r, (void *)p, (void *)a, (void *)v, (void *)x);
   t = stop_stopwatch(sw);
