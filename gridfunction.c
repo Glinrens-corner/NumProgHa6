@@ -218,25 +218,18 @@ void addevalLaplace_gridfunction(double a, void *data, pcgridfunction u,
   double factor = a/(h*h);
 
 
-  /*
-    Currently the looped variant is implemented
+  int ld = n+2;
+  
+  for (int icol = 1; icol < n+1 ; icol++){
+    int copy_start_offset =1+icol*(n+2);
+    axpy(n, 4.0*factor, uval+ copy_start_offset, 1, vval +copy_start_offset,1);
+    axpy(n, -1.0*factor, uval+copy_start_offset+ld,1, vval+copy_start_offset,1 );
+    axpy(n, -1.0*factor, uval+copy_start_offset-ld,1, vval+copy_start_offset,1 );
+    axpy(n, -1.0*factor, uval+copy_start_offset-1,1, vval+copy_start_offset,1 );
+    axpy(n, -1.0*factor, uval+copy_start_offset+1,1, vval+copy_start_offset,1 );
+    
 
-    TODO: replace with BLAS based Implementation
-   */
-  for (int icol = 1; icol < n+2 ; icol++){
-    for (int irow = 1; irow < n+2 ; irow++){
-      
-      vval[irow+icol*(n+2)] = factor*(4.0*uval[irow+icol*(n+2)]
-				      -uval[irow+1+icol*(n+2)]
-				      -uval[irow-1+icol*(n+2)]
-				      -uval[irow+(icol+1)*(n+2)]
-				      -uval[irow+(icol-1)*(n+2)]);
-
-    }
   }
-  /*
-   * TODO:
-   */
 }
 
 /*****************************
